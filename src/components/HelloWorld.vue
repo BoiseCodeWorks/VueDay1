@@ -1,58 +1,96 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-router" target="_blank" rel="noopener">router</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-vuex" target="_blank" rel="noopener">vuex</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+    <h3>New Cat</h3>
+    <form @submit.prevent="addCat">
+      <input type="text" placeholder="name" v-model="newCat.name" />
+      <input type="text" placeholder="imgUrl" v-model="newCat.imgUrl" />
+      <button type="submit">Meow</button>
+    </form>
+    <div class="cats">
+      <div class="cat" v-for="cat in cats" :key="cat.name">
+        <img :src="cat.imgUrl" alt="" />
+        <h1 :class="{ angry: cat.pets > 10 }">Name: {{ cat.name }}</h1>
+        <h2>Pets: {{ cat.pets }}</h2>
+        <h3 v-if="cat.pets > 10">Careful he is Angry!</h3>
+        <p v-else>Pet Away M'lord' or M'lady'</p>
+        <button @click="cat.pets++">Pet</button>
+        <button @click="autoPet(cat)">Begin AutoPet</button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import { log } from "util";
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
+  name: "HelloWorld",
+  data() {
+    return {
+      newCat: {
+        name: "",
+        imgUrl: ""
+      },
+      cats: [
+        {
+          name: "Mr Snibbley",
+          pets: 0,
+          imgUrl: "https://i.huffpost.com/gen/191974/CAT-TOP-HAT.jpg"
+        },
+        {
+          name: "Mr Snibbley Jr",
+          pets: 0,
+          imgUrl:
+            "http://www.wcyt.org/wp-content/uploads/2012/09/fancy-cat1.jpg"
+        },
+        {
+          name: "Mrs Snibbley",
+          pets: 0,
+          imgUrl:
+            "https://media.istockphoto.com/photos/white-maine-coon-girl-cat-wearing-golden-bow-on-head-sitting-up-with-picture-id871380166?k=6&m=871380166&s=612x612&w=0&h=bHdiwk6kD0_SduCFp7ur8dx1nOlTIulMtvJYpG2zQe0="
+        },
+        {
+          name: "Mrs Snibbley Jr",
+          pets: 0,
+          imgUrl:
+            "https://821872984941288636.weebly.com/uploads/3/9/1/9/39199659/1968045_orig.jpg"
+        }
+      ]
+    };
+  },
+  methods: {
+    autoPet(cat) {
+      setInterval(() => {
+        cat.pets++;
+        this.meow();
+      }, 1000);
+    },
+    meow() {
+      console.log("meow");
+    },
+    addCat() {
+      debugger;
+      let cat = {
+        name: this.newCat.name,
+        imgUrl: this.newCat.imgUrl,
+        pets: 0
+      };
+      this.cats.unshift(cat);
+      this.newCat = {
+        name: "",
+        imgUrl: ""
+      };
+    }
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
+.angry {
+  color: red;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+
+.cat img {
+  max-height: 10rem;
 }
 </style>
